@@ -1,0 +1,13 @@
+group: roleeval_zh_chinese
+task:
+  - roleeval_anime_and_comics_zh_chinese_test
+  - roleeval_fiction_zh_chinese_test
+  - roleeval_celebrities_zh_chinese_test
+  - roleeval_movies_and_tv_series_zh_chinese_test
+  - roleeval_games_zh_chinese_test
+aggregate_metric_list:
+  - metric: acc
+    aggregation: mean
+    weight_by_size: true
+metadata:
+  version: 1.0

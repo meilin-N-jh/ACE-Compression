@@ -1,0 +1,13 @@
+group: roleeval_zh_global
+task:
+  - roleeval_anime_and_comics_zh_global_test
+  - roleeval_fiction_zh_global_test
+  - roleeval_celebrities_zh_global_test
+  - roleeval_movies_and_tv_series_zh_global_test
+  - roleeval_games_zh_global_test
+aggregate_metric_list:
+  - metric: acc
+    aggregation: mean
+    weight_by_size: true
+metadata:
+  version: 1.0

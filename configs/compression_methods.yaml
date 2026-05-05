@@ -1,0 +1,69 @@
+# Compression Method Configuration
+# Documents compression methods evaluated in the ACE-Compression paper.
+
+compression_methods:
+  - id: FP16
+    method_type: baseline
+    notes: Uncompressed FP16 parent model
+    tooling: N/A
+    serving: vLLM with dtype=auto
+  - id: BnB-4bit
+    method_type: quantization
+    tooling: bitsandbytes
+    precision: 4-bit
+    license_terms_reference: bitsandbytes MIT
+    serving: vLLM with --quantization bitsandbytes --load-format bitsandbytes
+    exact_hyperparameters: not logged
+  - id: AWQ
+    method_type: quantization
+    tooling: AWQ / llm-awq
+    precision: 4-bit where applicable
+    license_terms_reference: MIT
+    serving: vLLM loading pre-quantized AWQ model
+    exact_hyperparameters: not logged
+  - id: GPTQ-INT4
+    method_type: quantization
+    tooling: AutoGPTQ / GPTQ tooling
+    precision: INT4
+    license_terms_reference: MIT
+    serving: vLLM loading pre-quantized GPTQ model
+    exact_hyperparameters: not logged
+  - id: GPTQ-INT8
+    method_type: quantization
+    tooling: AutoGPTQ / GPTQ tooling
+    precision: INT8
+    license_terms_reference: MIT
+    serving: vLLM loading pre-quantized GPTQ model
+    exact_hyperparameters: not logged
+    notes: Included where present in processed result tables (Llama-70B only)
+  - id: 2:4-Sparse
+    method_type: pruning
+    tooling: SparseGPT via llmcompressor
+    sparsity: 50%
+    structure: 2:4 structured sparsity
+    calibration_data: yahma/alpaca-cleaned (CC-BY-4.0)
+    calibration_samples: 128
+    calibration_seq_len: 2048
+    target_modules: attention and MLP projection matrices (q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj)
+    pruning_script: compression/pruning_scripts/<model>/run_2_4_sparse.py
+    exact_command_hyperparameters: not logged
+  - id: Unstructured-Sparse
+    method_type: pruning
+    tooling: SparseGPT via llmcompressor
+    sparsity: 50%
+    structure: unstructured sparsity
+    calibration_data: yahma/alpaca-cleaned (CC-BY-4.0)
+    calibration_samples: 128
+    calibration_seq_len: 2048
+    target_modules: attention and MLP projection matrices
+    pruning_script: compression/pruning_scripts/<model>/run_unstructured_sparse.py
+    exact_command_hyperparameters: not logged
+  - id: Trim
+    method_type: pruning variant
+    tooling: Model-specific trimming
+    notes: Included where present in processed result tables (Qwen2.5-14B only)
+    exact_hyperparameters: not logged
+# Quantization methods (AWQ, GPTQ-INT4, GPTQ-INT8) use pre-quantized models.
+# Pruning methods (2:4-Sparse, Unstructured-Sparse) use one-shot SparseGPT
+# applied to the FP16 parent model.
+# BnB-4bit is applied at inference time via vLLM.

@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Test / cache data (lm-evaluation-harness test fixtures, not part of paper)
+*.pkl
+.mypy_cache/
+.pytest_cache/
+
+# Logs and temp
+*.log
+*.tmp
+*.zip
+
+# Raw results (not included in artifact)
+results/raw/**/cache/
+results/raw/**/.cache/
+
+# Git
+.git/

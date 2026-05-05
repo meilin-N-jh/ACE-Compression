@@ -1,0 +1,236 @@
+# Benchmark Configuration
+# Documents benchmarks used in the ACE-Compression paper.
+# Maps each paper benchmark to its code entry point, processed result file, and metric columns.
+
+benchmarks:
+  - id: IFEval
+    category: A (direct lm-eval, no vLLM service needed)
+    code_entry: paper_benchmarks/01_IFEval/<model>/run_*_vllm_ifeval.sh
+    source_url: https://huggingface.co/datasets/google/IFEval
+    license_terms: Apache-2.0
+    processed_file: results/processed/IFEval.csv
+    ability_group: Procedural reasoning and instruction following
+    main_metric_columns:
+      - Prompt-Strict
+      - Prompt-Loose
+      - Inst-Strict
+      - Inst-Loose
+    notes: Prompt-level and instruction-level strict/loose metrics
+
+  - id: gsm8k
+    category: A (direct lm-eval, no vLLM service needed)
+    code_entry: paper_benchmarks/02_gsm8k/<model>/run_*_vllm_gsm8k.sh
+    source_url: https://github.com/openai/grade-school-math
+    license_terms: MIT
+    processed_file: results/processed/gsm8k.csv
+    ability_group: Mathematical reasoning
+    evaluation_config:
+      task: gsm8k_cot
+      temperature: 0
+      top_p: 1
+      num_fewshot: 0
+    main_metric_columns:
+      - Strict Match
+      - Strict Match StdErr
+      - Flexible Match
+      - Flexible Match StdErr
+    notes: Strict/flexible accuracy with standard errors
+
+  - id: human-eval
+    category: A (direct lm-eval, no vLLM service needed)
+    code_entry: paper_benchmarks/03_human-eval/<model>/run_*_vllm_humaneval.sh
+    source_url: https://github.com/openai/human-eval
+    license_terms: MIT
+    processed_file: results/processed/human-eval.csv
+    ability_group: Code generation
+    evaluation_config:
+      task: humaneval_instruct
+      num_fewshot: 0
+    main_metric_columns:
+      - Pass@1 (Greedy)
+      - Pass@1 (Sampling, n=20)
+      - Pass@10 (Sampling, n=20)
+      - Pass@1 (Sampling, n=100)
+      - Pass@10 (Sampling, n=100)
+      - Pass@100 (Sampling, n=100)
+    notes: Greedy, sampled n=20, and sampled n=100 pass@k metrics
+
+  - id: TruthfulQA
+    category: A (direct lm-eval, no vLLM service needed)
+    code_entry: paper_benchmarks/04_TruthfulQA/<model>/run_*_vllm_truthfulqa.sh
+    source_url: https://github.com/sylinrl/TruthfulQA
+    license_terms: Apache-2.0
+    processed_file: results/processed/TruthfulQA.csv
+    ability_group: Truthfulness
+    evaluation_config:
+      shot_settings:
+        - 0-shot
+        - 3-shot with fewshot_seed in [1234, 5678, 9012]
+      evaluate: mc1, mc2, gen
+    main_metric_columns:
+      - 0shot-MC1
+      - 0shot-MC2
+      - 3shot-MC1
+      - 3shot-MC2
+    notes: MC1/MC2 and generation-side metrics. 3-shot results averaged over 3 seeds.
+
+  - id: C-eval
+    category: A (direct lm-eval, no vLLM service needed)
+    code_entry: paper_benchmarks/05_C-eval/<model>/run_*_vllm_ceval.sh
+    source_url: https://github.com/hkust-nlp/ceval
+    license_terms: code MIT; dataset CC-BY-NC-SA-4.0
+    processed_file: results/processed/C-eval.csv
+    ability_group: Knowledge and exam-style reasoning
+    evaluation_config:
+      tasks:
+        - ceval-valid
+        - ceval-test
+    main_metric_columns:
+      - Valid Acc
+      - Valid Stderr
+      - Test Acc
+      - Test Stderr
+    notes: Validation and test accuracy with standard errors
+
+  - id: role-eval
+    category: A (direct lm-eval, no vLLM service needed)
+    code_entry: paper_benchmarks/06_roleeval/<model>/run_roleeval_*.py
+    source_url: https://www.scidb.cn/en/detail?dataSetId=c16b1553db0341d8ba0de71fe3e55a8c and https://arxiv.org/abs/2312.16132
+    license_terms: dataset license CC BY-NC-SA 4.0 (ScienceDB); arXiv paper CC BY-SA 4.0
+    processed_file: results/processed/role-eval.csv
+    ability_group: Role knowledge and role consistency
+    evaluation_config:
+      language_slices:
+        - EN
+        - ZH
+      subsets:
+        - chinese (Chinese roles)
+        - global (English roles)
+      shot_settings:
+        - 0-shot
+        - 5-shot
+    main_metric_columns:
+      - 0_en_chinese
+      - 0_en_global
+      - 0_zh_chinese
+      - 0_zh_global
+      - 5_en_chinese
+      - 5_en_global
+      - 5_zh_chinese
+      - 5_zh_global
+    notes: Bilingual role-grounded knowledge evaluation. RoleEval dataset must be obtained from ScienceDB.
+
+  - id: ToM-Bench
+    category: B (requires vLLM service)
+    code_entry: paper_benchmarks/07_ToM-Bench/<model>/run_*.sh
+    source_url: https://github.com/zhchen18/ToMBench
+    license_terms: MIT
+    processed_files:
+      - results/processed/ToM-Bench_ability.csv
+      - results/processed/ToM-Bench_task.csv
+      - results/processed/ToM-Bench_subability.csv
+    ability_group: Theory of mind / social cognition
+    evaluation_config:
+      language: ZH
+      seed: 42
+      try_times: 5
+      abilities: 6 (Belief, Desire, Emotion, Intention, Knowledge, Non-Literal Communication)
+      tasks: 8 (various theory-of-mind tasks)
+    main_metric_columns:
+      - Belief (ZH)
+      - Belief (EN)
+      - False Belief Task (ZH)
+      - False Belief Task (EN)
+      - "Belief: Content false beliefs (ZH)"
+    language_slices:
+      - EN
+      - ZH
+    summary_tool: generate_summary_tables_with_ci.py
+    notes: Ability/task/subability level breakdowns with confidence intervals. Results in percentage ± CI format.
+
+  - id: eq-bench
+    category: B (requires vLLM service)
+    code_entry: paper_benchmarks/08_eq-bench/<model>/config/config_*.cfg
+    source_url: https://github.com/EQ-bench/EQ-Bench
+    license_terms: MIT
+    processed_file: results/processed/eq-bench.csv
+    ability_group: Emotional intelligence / affective understanding
+    evaluation_config:
+      iterations: 10
+      judge_model: Llama3-70B (local)
+    main_metric_columns:
+      - Benchmark Score
+      - Num Questions Parseable
+    notes: Benchmark score averaged over 10 iterations. EQ-Bench question data must be obtained from the benchmark source.
+
+  - id: PsychoBench
+    category: B (requires vLLM service)
+    code_entry: paper_benchmarks/10_PsychoBench/<model>/run_*.sh
+    source_url: https://github.com/CUHK-ARISE/PsychoBench
+    license_terms: GPL-3.0; README states research use only / no commercial use
+    processed_file: results/processed/Psychobench.csv
+    ability_group: Personality and psychological questionnaires
+    evaluation_config:
+      shuffle_count: 1
+      test_count: 10
+      questionnaires: Empathy, BFI, BSRI, EPQ-R, LMS, DTDD, ECR-R, GSE, ICB, LOT-R, EIS, WLEIS, CABIN, 16P
+    main_metric_columns:
+      - BFI
+      - EPQ-R
+      - DTDD
+      - BSRI
+      - ECR-R
+      - EIS
+      - Empathy
+      - GSE
+      - ICB
+      - LMS
+      - LOT-R
+      - WLEIS
+      - CABIN
+    notes: PsychoBench questionnaires and source code must be obtained from the benchmark source. Not redistributed in this package.
+
+  - id: PsychoBench-16P
+    category: B (requires vLLM service)
+    code_entry: paper_benchmarks/10_PsychoBench/<model>/run_*.sh
+    source_url: https://github.com/CUHK-ARISE/PsychoBench
+    license_terms: GPL-3.0; README states research use only / no commercial use
+    processed_file: results/processed/Psychobench_16P.csv
+    ability_group: Personality and psychological questionnaires
+    main_metric_columns:
+      - Personality Type
+      - Count
+      - Extraverted
+      - Intuitive
+      - Thinking
+      - Judging
+      - Assertive
+    notes: Aggregated 16-personality type counts. Part of PsychoBench evaluation.
+
+  - id: CharacterEval
+    category: B (requires vLLM service)
+    code_entry: paper_benchmarks/09_CharacterEval/<model>/run_*.sh
+    source_url: https://github.com/morecry/CharacterEval
+    license_terms: MIT
+    processed_file: results/processed/CharacterEval.csv
+    ability_group: Character fidelity / role-play consistency
+    evaluation_config:
+      stages:
+        - "1. Get model responses via vLLM API"
+        - "2. Score responses using CharacterRM reward model"
+    main_metric_columns:
+      - Total
+      - Accuracy
+      - Behavior
+      - Coherence
+      - Communication_skills
+      - Consistency
+      - Diversity
+      - Empathy
+      - Exposure
+      - Fluency
+      - Hallucination
+      - Humanlikeness
+      - Utterance
+    summary_tool: generate_summary_csv.py
+    notes: CharacterEval.csv is the canonical processed CharacterEval result file. Two-stage evaluation: response generation then CharacterRM scoring.

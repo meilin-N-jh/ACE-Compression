@@ -1,0 +1,18 @@
+task: roleeval_celebrities_en_global_test
+dataset_path: csv
+dataset_name: roleeval_celebrities_en_global_test
+output_type: multiple_choice
+dataset_kwargs:
+  data_files:
+    test: ../../benchmark/upstream/en/global/test/celebrities_test.csv
+test_split: test
+num_fewshot: 0
+doc_to_text: !function utils.doc_to_text
+doc_to_choice: ["A", "B", "C", "D"]
+doc_to_target: answer
+metric_list:
+  - metric: acc
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

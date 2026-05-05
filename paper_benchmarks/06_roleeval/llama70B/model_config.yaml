@@ -1,0 +1,111 @@
+models:
+  llama70b_fp16:
+    model_type: "transformers"
+    model_path: "../../../models/Llama3-70b/Llama-3.1-70B-Instruct"
+    load_in_8bit: false
+    load_in_4bit: false
+    device_map: "auto"
+    torch_dtype: "float16"
+    trust_remote_code: true
+
+  llama70b_4bit:
+    model_type: "transformers"
+    model_path: "../../../models/Llama3-70b/Llama-3.1-70B-Instruct"
+    load_in_8bit: false
+    load_in_4bit: true
+    bnb_4bit_compute_dtype: "float16"
+    bnb_4bit_quant_type: "nf4"
+    bnb_4bit_use_double_quant: false
+    device_map: "auto"
+    torch_dtype: "float16"
+    trust_remote_code: true
+
+  llama70b_gptq_int4:
+    model_type: "autogptq"
+    model_path: "../../../models/Llama3-70b/Meta-Llama-3.1-70B-Instruct-GPTQ-INT4"
+    device_map: "auto"
+    trust_remote_code: true
+    use_safetensors: true
+
+  llama70b_gptq_int8:
+    model_type: "autogptq"
+    model_path: "../../../models/Llama3-70b/Meta-Llama-3.1-70B-Instruct-GPTQ-INT8"
+    device_map: "auto"
+    trust_remote_code: true
+    use_safetensors: true
+
+  llama70b_fp16_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8000"
+    model_name: "Llama-3.1-70B-Instruct"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  llama70b_4bit_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8002"
+    model_name: "llama31-70b-bnb4bit"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  llama70b_gptq_int4_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8003"
+    model_name: "llama31-70b-gptq-int4"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  llama70b_gptq_int8_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8004"
+    model_name: "llama31-70b-gptq-int8"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  llama70b_awq_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8000"
+    model_name: "llama31-70b-awq-int4"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  llama70b_2_4_sparse_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8010"
+    model_name: "llama31-70b-2to4-sparse"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  llama70b_unstructured_sparse_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8011"
+    model_name: "llama31-70b-unstructured-sparse"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+# 生成参数
+generation_config:
+  max_new_tokens: 64
+  temperature: 0
+  top_p: 1.0
+  do_sample: false
+
+# 提示模板（中文/双语通用）
+prompt_template: |
+  以下是一道单项选择题，请从A、B、C、D四个选项中选出正确答案。
+
+  题目：{question}
+  A. {option_a}
+  B. {option_b}
+  C. {option_c}
+  D. {option_d}
+
+  只输出正确选项的字母（A/B/C/D），不要输出其他内容：
+  答案：

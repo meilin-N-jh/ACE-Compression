@@ -1,0 +1,65 @@
+models:
+  # 1. FP16 基线 (原始精度)
+  qwen7b_fp16:
+    model_type: "transformers"
+    model_path: "../../../models/Qwen-7B-Chat"
+    load_in_8bit: false
+    load_in_4bit: false
+    device_map: "auto"
+    torch_dtype: "float16"
+    trust_remote_code: true
+
+  # 2. 8-bit 动态量化 (LLM.int8)
+  qwen7b_8bit:
+    model_type: "transformers"
+    model_path: "../../../models/Qwen-7B-Chat"
+    load_in_8bit: true
+    load_in_4bit: false
+    device_map: "auto"
+    trust_remote_code: true
+
+  # 3. 4-bit NF4 量化 (使用和 8bit 相同的方法)
+  qwen7b_4bit_nf4:
+    model_type: "transformers"
+    model_path: "../../../models/Qwen-7B-Chat"
+    load_in_8bit: false
+    load_in_4bit: true
+    bnb_4bit_compute_dtype: "float16"
+    bnb_4bit_quant_type: "nf4"
+    bnb_4bit_use_double_quant: false
+    device_map: "auto"
+    trust_remote_code: true
+
+  # 4. GPTQ Int4 量化 (已量化模型)
+  qwen7b_gptq:
+    model_type: "autogptq"
+    model_path: "../../../models/Qwen-7B-Chat-Int4"
+    device_map: "auto"
+    trust_remote_code: true
+    use_safetensors: true
+
+  # 5. GGUF Q4_K_M (llama.cpp)
+  qwen7b_gguf:
+    model_type: "llamacpp"
+    model_path: "../../../models/Qwen-7B-Chat-GGUF/Qwen-7B-Chat.Q4_K_M.gguf"
+    n_ctx: 4096
+    n_gpu_layers: -1
+
+# 推理参数
+generation_config:
+  max_new_tokens: 5
+  temperature: 0.01
+  top_p: 0.95
+  do_sample: false
+
+# 提示模板
+prompt_template: |
+  以下是一道单项选择题，请从A、B、C、D四个选项中选出正确答案。
+
+  题目：{question}
+  A. {option_a}
+  B. {option_b}
+  C. {option_c}
+  D. {option_d}
+
+  答案：

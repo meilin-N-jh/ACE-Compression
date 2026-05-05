@@ -1,0 +1,76 @@
+# Llama3.1-8b RoleEval 双语评测配置
+# 使用vLLM OpenAI API服务器
+
+models:
+  # 1. FP16 基线 (原始精度)
+  llama3_1_8b_fp16_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8400"
+    model_name: "meta-llama-3.1-8b-instruct-fp16"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 2. BNB 4-bit 量化
+  llama3_1_8b_4bit_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8401"
+    model_name: "meta-llama-3.1-8b-instruct-bnb-4bit"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 3. AWQ 4-bit 量化
+  llama3_1_8b_awq_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8402"
+    model_name: "meta-llama-3.1-8b-instruct-awq-int4"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 4. GPTQ INT4 量化
+  llama3_1_8b_gptq_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8403"
+    model_name: "meta-llama-3.1-8b-instruct-gptq-int4"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 5. 2:4 Sparse
+  llama3_1_8b_2_4_sparse_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8410"
+    model_name: "meta-llama-3.1-8b-instruct-2to4-sparse"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 6. Unstructured Sparse
+  llama3_1_8b_unstructured_sparse_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8411"
+    model_name: "meta-llama-3.1-8b-instruct-unstructured-sparse"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+# 生成参数（默认值，会被model配置覆盖）
+generation_config:
+  max_new_tokens: 5
+  temperature: 0
+  top_p: 1.0
+  do_sample: false
+
+# 提示模板（中文/双语通用）
+prompt_template: |
+  以下是一道单项选择题，请从A，B，C，D四个选项中选出正确答案。
+
+  题目：{question}
+  A. {option_a}
+  B. {option_b}
+  C. {option_c}
+  D. {option_d}
+
+  只输出正确选项的字母（A/B/C/D），不要输出其他内容：

@@ -1,0 +1,86 @@
+# Qwen2.5-14B RoleEval 双语评测配置
+# 使用vLLM OpenAI API服务器
+
+models:
+  # 1. FP16 基线 (原始精度)
+  qwen25_14b_fp16_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8100"
+    model_name: "qwen2.5-14b-fp16"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 2. BNB 4-bit 量化
+  qwen25_14b_bnb_4bit_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8101"
+    model_name: "qwen2.5-14b-bnb-4bit"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 3. AWQ 4-bit 量化
+  qwen25_14b_awq_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8102"
+    model_name: "qwen2.5-14b-awq"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 4. GPTQ INT4 量化
+  qwen25_14b_gptq_int4_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8103"
+    model_name: "qwen2.5-14b-gptq-int4"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 5. Trim 量化
+  qwen25_14b_trim_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8104"
+    model_name: "qwen2.5-14b-trim"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 6. 2:4 Sparse
+  qwen25_14b_2_4_sparse_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8105"
+    model_name: "qwen2.5-14b-2to4-sparse"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 7. Unstructured Sparse
+  qwen25_14b_unstructured_sparse_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8106"
+    model_name: "qwen2.5-14b-unstructured-sparse"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+# 生成参数（默认值，会被model配置覆盖）
+generation_config:
+  max_new_tokens: 5
+  temperature: 0
+  top_p: 1.0
+  do_sample: false
+
+# 提示模板（中文/双语通用）
+prompt_template: |
+  以下是一道单项选择题，请从A、B、C、D四个选项中选出正确答案。
+
+  题目：{question}
+  A. {option_a}
+  B. {option_b}
+  C. {option_c}
+  D. {option_d}
+
+  只输出正确选项的字母（A/B/C/D），不要输出其他内容：
+  答案：

@@ -1,0 +1,76 @@
+# DeepSeek-V2-Lite-16B RoleEval 双语评测配置
+# 使用vLLM OpenAI API服务器
+
+models:
+  # 1. FP16 基线 (原始精度)
+  deepseek_v2_lite_fp16_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8300"
+    model_name: "deepseek-v2-lite-fp16"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 2. BNB 4-bit 量化
+  deepseek_v2_lite_bnb_4bit_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8301"
+    model_name: "deepseek-v2-lite-bnb-4bit"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 3. AWQ 4-bit 量化
+  deepseek_v2_lite_awq_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8302"
+    model_name: "deepseek-v2-lite-awq"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 4. GPTQ INT4 量化
+  deepseek_v2_lite_gptq_int4_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8303"
+    model_name: "deepseek-v2-lite-gptq-int4"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 5. 2:4 Sparse
+  deepseek_v2_lite_2_4_sparse_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8304"
+    model_name: "deepseek-v2-lite-2to4-sparse"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+  # 6. Unstructured Sparse
+  deepseek_v2_lite_unstructured_sparse_vllm:
+    model_type: "vllm"
+    base_url: "http://127.0.0.1:8305"
+    model_name: "deepseek-v2-lite-unstructured-sparse"
+    max_new_tokens: 5
+    temperature: 0.0
+    top_p: 1.0
+
+# 生成参数（默认值，会被model配置覆盖）
+generation_config:
+  max_new_tokens: 5
+  temperature: 0
+  top_p: 1.0
+  do_sample: false
+
+# 提示模板（中文/双语通用）
+prompt_template: |
+  以下是一道单项选择题，请从A，B，C，D四个选项中选出正确答案。
+
+  题目：{question}
+  A. {option_a}
+  B. {option_b}
+  C. {option_c}
+  D. {option_d}
+
+  只输出正确选项的字母（A/B/C/D），不要输出其他内容：

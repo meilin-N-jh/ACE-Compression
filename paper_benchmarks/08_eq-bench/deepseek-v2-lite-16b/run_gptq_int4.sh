@@ -1,0 +1,45 @@
+#!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+find_artifact_root() {
+  local dir="$SCRIPT_DIR"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/configs/models.yaml" ]]; then
+      printf "%s\n" "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+ARTIFACT_ROOT="${ARTIFACT_ROOT:-$(find_artifact_root || true)}"
+if [[ -z "${ARTIFACT_ROOT}" ]]; then
+  echo "Could not locate artifact root (configs/models.yaml)." >&2
+  exit 1
+fi
+
+# Run EQ-Bench for DeepSeek-V2-Lite-16B GPTQ-INT4 via vLLM OpenAI API
+
+set -euo pipefail
+
+EQBENCH_DIR="${ARTIFACT_ROOT}/paper_benchmarks/08_eq-bench/benchmark"
+CONFIG_FILE="$EQBENCH_DIR/deepseek-v2-lite-16b/config/config_gptq_int4.cfg"
+PORT="8303"
+TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
+
+RESULTS_DIR="$EQBENCH_DIR/deepseek-v2-lite-16b/results"
+RUN_LOG="$EQBENCH_DIR/deepseek-v2-lite-16b/logs/eqbench_gptq_int4_${TIMESTAMP}.log"
+
+mkdir -p "$RESULTS_DIR"
+
+if ! curl -s "http://127.0.0.1:${PORT}/v1/models" > /dev/null 2>&1; then
+    echo "[ERROR] vLLM API server not found on port $PORT"
+    exit 1
+fi
+
+cd "$EQBENCH_DIR"
+EQBENCH_OUTPUT_DIR="$RESULTS_DIR" PYTHONUNBUFFERED=1 python -u eq-bench.py --config "$CONFIG_FILE" 2>&1 | tee -a "$RUN_LOG"
+
+
+echo "Done!"

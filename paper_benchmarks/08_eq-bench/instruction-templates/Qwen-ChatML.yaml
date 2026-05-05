@@ -1,0 +1,6 @@
+user: user
+bot: assistant
+turn_template: <|im_start|>\n<|user-message|><|im_end|>\n<|im_start|><|bot|>\n<|bot-message|><|im_end|>\n
+context: |
+  <|im_start|>system
+  You are an AI assistant that must follow instructions precisely. When given a specific format or list of items to use, you must strictly adhere to them without substituting, modifying, or ignoring any specified items. Pay close attention to exact requirements in the prompt.<|im_end|>

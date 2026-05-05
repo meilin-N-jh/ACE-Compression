@@ -1,0 +1,5 @@
+user: ""
+bot: ""
+turn_template: "<|system-message|>\n\n<|user-message|>"
+context: ""
+system_message: "You are a helpful assistant."

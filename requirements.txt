@@ -1,0 +1,82 @@
+# ACE-Compression Python Dependencies
+# Tested with Python 3.10+ and the qwen2.5 conda environment.
+#
+# Install: pip install -r requirements.txt
+#
+# Note: lm-evaluation-harness is included locally in
+# paper_benchmarks/00_shared/lm-evaluation-harness/ and should be
+# installed from there via `pip install -e .` if needed.
+
+# ============================================================
+# Core ML Framework
+# ============================================================
+torch>=2.0.0
+transformers>=4.57.0
+tokenizers>=0.22.0
+accelerate>=1.12.0
+safetensors>=0.7.0
+datasets>=4.4.0
+huggingface-hub>=0.36.0
+fsspec>=2025.0.0
+
+# ============================================================
+# Data Processing & Numeric
+# ============================================================
+numpy>=2.0.0
+pandas>=2.0.0
+scipy>=1.15.0
+scikit-learn>=1.7.0
+matplotlib>=3.10.0
+
+# ============================================================
+# Utilities
+# ============================================================
+PyYAML>=6.0
+tqdm>=4.67.0
+click>=8.0.0
+Jinja2>=3.0.0
+psutil>=7.0.0
+jsonlines>=4.0.0
+Pillow>=12.0.0
+nltk>=3.9.0
+einops>=0.8.0
+
+# ============================================================
+# vLLM Inference Serving (Category B benchmarks)
+# ============================================================
+vllm>=0.13.0
+fastapi>=0.128.0
+uvicorn>=0.40.0
+openai>=2.15.0
+ray>=2.53.0
+
+# ============================================================
+# Quantization Libraries
+# ============================================================
+bitsandbytes>=0.49.0
+auto-gptq>=0.7.0
+autoawq>=0.2.9
+optimum>=1.16.0
+
+# ============================================================
+# Compression / Pruning
+# ============================================================
+compressed-tensors>=0.12.0
+
+# ============================================================
+# Model & Data Download
+# ============================================================
+modelscope>=1.34.0
+
+# ============================================================
+# Evaluation Metrics
+# ============================================================
+evaluate>=0.4.0
+sacrebleu>=2.5.0
+rouge-score>=0.1.0
+BLEURT>=0.0.2
+
+# ============================================================
+# PsychoBench / RoleEval / CharacterEval
+# ============================================================
+peft>=0.18.0
