@@ -110,7 +110,6 @@ Located in `serving/`, organized by model family. These are vLLM startup scripts
 
 Located in `results/processed/`:
 - 13 canonical CSV files covering all 10 benchmarks
-- `CharacterEval.csv` is the canonical processed CharacterEval result file
 
 ### Report Sync Utilities
 
